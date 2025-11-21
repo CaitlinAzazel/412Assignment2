@@ -21,7 +21,13 @@
         <!-- Second Activity -->
         <activity
             android:name=".SecondActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.assignment2.SHOW_SECOND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
         <!-- Image Activity -->
         <activity android:name=".ViewImageActivity" />
 

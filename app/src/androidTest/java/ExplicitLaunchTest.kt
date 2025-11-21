@@ -4,63 +4,63 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-private const val TIMEOUT = 5000L
-private const val APP_PACKAGE = "com.example.assignment2"
+import org.junit.Assert.assertTrue
 
 @RunWith(AndroidJUnit4::class)
-class ExplicitLaunchTest {
+class ExplicitLaunchUiAutomatorTest {
 
     private lateinit var device: UiDevice
+    private val LAUNCH_TIMEOUT = 5000L
+    private val APP_PACKAGE = "com.example.assignment2"
 
     @Before
     fun setUp() {
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        device = UiDevice.getInstance(instrumentation)
-
+        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        // Press home to start from the home screen
         device.pressHome()
 
+        // Wait for launcher
         val launcherPackage = device.launcherPackageName
-        device.wait(Until.hasObject(By.pkg(launcherPackage).depth(0)), TIMEOUT)
+        device.wait(Until.hasObject(By.pkg(launcherPackage).depth(0)), LAUNCH_TIMEOUT)
+
+        // Launch the app
+        val context = InstrumentationRegistry.getInstrumentation().context
+        val intent = context.packageManager.getLaunchIntentForPackage(APP_PACKAGE)?.apply {
+            addFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        }
+        context.startActivity(intent)
+
+        // Wait for the app to appear
+        device.wait(Until.hasObject(By.pkg(APP_PACKAGE).depth(0)), LAUNCH_TIMEOUT)
     }
 
     @Test
     fun testStartExplicitActivity() {
+        // Click the "start activity explicitly" button
+        val startButton = device.findObject(UiSelector().text("Start Activity Explicitly"))
+        startButton.click()
 
-        // 1. Find and tap your app icon
-        val appIcon = device.findObject(By.descContains("Assignment2App"))
-            ?: device.findObject(By.textContains("Assignment2App"))
+        // Wait for second activity to appear
+        device.wait(Until.hasObject(By.pkg(APP_PACKAGE).depth(0)), LAUNCH_TIMEOUT)
 
-
-        assertTrue("App icon not found!", appIcon != null)
-        appIcon!!.click()
-
-        // Wait for MainActivity
-        device.wait(Until.hasObject(By.pkg(APP_PACKAGE).depth(0)), TIMEOUT)
-
-        // 2. Click the button with resource ID btnExplicit
-        val explicitButton = device.wait(
-            Until.findObject(By.res(APP_PACKAGE, "btnExplicit")),
-            TIMEOUT
+        // Check that the TextView contains one of the challenges
+        val textView = device.findObject(UiSelector().resourceId("$APP_PACKAGE:id/textViewChallenges"))
+        val challenges = listOf(
+            "Battery consumption optimization",
+            "Handling multiple screen sizes",
+            "Ensuring app security",
+            "Managing background tasks",
+            "Network connectivity issues"
         )
 
-        assertTrue("Explicit button not found!", explicitButton != null)
-        explicitButton!!.click()
-
-        // 3. Verify text "Challenges" appears in SecondActivity
-        val foundChallengesText = device.wait(
-            Until.hasObject(By.textContains("Challenges")),
-            TIMEOUT
-        )
-
-        assertTrue(
-            "Expected 'Challenges' text not found in SecondActivity.",
-            foundChallengesText
-        )
+        // Assert that at least one challenge is present in the TextView
+        val text = textView.text
+        val containsChallenge = challenges.any { text.contains(it) }
+        assertTrue("Second activity does not contain any expected challenge", containsChallenge)
     }
 }
