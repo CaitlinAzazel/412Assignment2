@@ -79,4 +79,6 @@ The app demonstrates Android basics including:
 <img width="294" height="699" alt="image" src="https://github.com/user-attachments/assets/b55a7d8b-492a-42d9-a870-08d01ddf9ba9" />
 <img width="318" height="706" alt="image" src="https://github.com/user-attachments/assets/e2feb34e-5eb1-4b5b-8603-b91f882ab54c" />
 <img width="316" height="704" alt="CaptureImage" src="https://github.com/user-attachments/assets/f2df69d5-d9bd-46a6-870e-91694b34b16c" />
+<img width="2541" height="1380" alt="image" src="https://github.com/user-attachments/assets/26fcb001-d3ed-4f9e-95e5-fa7dd08c34e3" />
+
 
