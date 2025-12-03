@@ -20,6 +20,9 @@
       <SelectionState runConfigName="testStartExplicitActivity()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="ExplicitLaunchUiAutomatorTest">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>
